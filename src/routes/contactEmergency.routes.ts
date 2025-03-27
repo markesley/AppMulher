@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { ContatoEmergenciaService } from '../services/contactEmergency.service';
 import { CreateContatoEmergenciaDTO } from '../interfaces/contactEmergency.dto';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 export async function contatoEmergenciaRoutes(app: FastifyInstance) {
   const service = new ContatoEmergenciaService();

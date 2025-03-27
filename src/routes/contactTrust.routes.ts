@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { ContatoConfiancaService } from '../services/contactTrust.service';
 import { CreateContatoConfiancaDTO } from '../interfaces/contactTrust.dto';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 export async function contatoConfiancaRoutes(app: FastifyInstance) {
   const service = new ContatoConfiancaService();

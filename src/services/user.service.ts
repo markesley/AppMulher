@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import { User, UserCreate, UserRepository } from '../interfaces/user.interface';
 import { UserRepositoryPrisma } from '../repositories/user.repository';
 
@@ -12,7 +13,8 @@ class UserService {
     if (verifyIfUserExists) {
       throw new Error('User already exists');
     }
-    const result = await this.userRepository.create({ email, name, password });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await this.userRepository.create({ email, name, password: hashedPassword });
 
     return result;
   }

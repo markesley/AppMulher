@@ -1,11 +1,13 @@
-import { FastifyInstance, FastifyRequest } from 'fastify';
-import { AlertaEmergenciaService } from '../services/alertEmergency.service'
+import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { AlertaEmergenciaService } from '../services/alertEmergency.service';
 import { CreateAlertaEmergenciaDTO } from '../interfaces/alertEmergency.dto';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 export async function alertaEmergenciaRoutes(app: FastifyInstance) {
   const service = new AlertaEmergenciaService();
 
-  app.post('/', async (request: FastifyRequest<{ Body: CreateAlertaEmergenciaDTO }>, reply) => {
+  // POST: Criar alerta de emergência
+  app.post('/', async (request: FastifyRequest<{ Body: CreateAlertaEmergenciaDTO }>, reply: FastifyReply) => {
     try {
       const alerta = await service.criarAlerta(request.body);
       return reply.status(201).send(alerta);
@@ -14,7 +16,8 @@ export async function alertaEmergenciaRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/', async (_, reply) => {
+  // GET: Listar alertas
+  app.get('/', async (_, reply: FastifyReply) => {
     try {
       const alertas = await service.listarAlertas();
       return reply.send(alertas);
@@ -23,7 +26,8 @@ export async function alertaEmergenciaRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/:id', async (request: FastifyRequest<{ Params: { id: string } }>, reply) => {
+  // GET: Buscar alerta por ID
+  app.get('/:id',  async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     try {
       const alerta = await service.buscarPorId(request.params.id);
       if (!alerta) {
@@ -35,7 +39,8 @@ export async function alertaEmergenciaRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/usuario/:usuarioId', async (request: FastifyRequest<{ Params: { usuarioId: string } }>, reply) => {
+  // GET: Buscar alertas por usuário
+  app.get('/usuario/:usuarioId', async (request: FastifyRequest<{ Params: { usuarioId: string } }>, reply: FastifyReply) => {
     try {
       const alertas = await service.buscarPorUsuario(request.params.usuarioId);
       return reply.send(alertas);
@@ -44,7 +49,8 @@ export async function alertaEmergenciaRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/:id', async (request: FastifyRequest<{ Params: { id: string }; Body: Partial<CreateAlertaEmergenciaDTO> }>, reply) => {
+  // PUT: Atualizar alerta de emergência
+  app.put('/:id',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             async (request: FastifyRequest<{ Params: { id: string }; Body: Partial<CreateAlertaEmergenciaDTO> }>, reply: FastifyReply) => {
     try {
       const alerta = await service.atualizarAlerta(request.params.id, request.body);
       return reply.send(alerta);
@@ -53,7 +59,8 @@ export async function alertaEmergenciaRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/:id', async (request: FastifyRequest<{ Params: { id: string } }>, reply) => {
+  // DELETE: Remover alerta de emergência
+  app.delete('/:id', async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     try {
       await service.removerAlerta(request.params.id);
       return reply.status(204).send();

@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { PostService } from '../services/post.service';
 import { CreatePostDTO } from '../interfaces/post.dto';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 export async function postRoutes(fastify: FastifyInstance) {
   const postService = new PostService();

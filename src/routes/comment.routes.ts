@@ -1,12 +1,13 @@
 import { FastifyInstance } from 'fastify';
 import { ComentarioService } from '../services/comment.service'
 import { CreateComentarioDTO } from '../interfaces/comment.dto';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 export async function comentarioRoutes(fastify: FastifyInstance) {
   const comentarioService = new ComentarioService();
 
   // Criar comentário
-  fastify.post<{ Body: CreateComentarioDTO }>('/', async (req, reply) => {
+  fastify.post<{ Body: CreateComentarioDTO }>('/',{ preHandler: authMiddleware }, async (req, reply) => {
     try {
       const comentario = await comentarioService.createComentario(req.body);
       return reply.code(201).send(comentario);
@@ -17,7 +18,7 @@ export async function comentarioRoutes(fastify: FastifyInstance) {
   });
 
   // Listar todos os comentários
-  fastify.get('/', async (_, reply) => {
+  fastify.get('/',{ preHandler: authMiddleware }, async (_, reply) => {
     try {
       const comentarios = await comentarioService.getAllComentarios();
       return reply.send(comentarios);
@@ -28,7 +29,7 @@ export async function comentarioRoutes(fastify: FastifyInstance) {
   });
 
   // Buscar comentário por ID
-  fastify.get<{ Params: { id: string } }>('/:id', async (req, reply) => {
+  fastify.get<{ Params: { id: string } }>('/:id',{ preHandler: authMiddleware }, async (req, reply) => {
     try {
       const comentario = await comentarioService.getComentarioById(req.params.id);
       if (!comentario) {
@@ -42,7 +43,7 @@ export async function comentarioRoutes(fastify: FastifyInstance) {
   });
 
   // Deletar comentário
-  fastify.delete<{ Params: { id: string } }>('/:id', async (req, reply) => {
+  fastify.delete<{ Params: { id: string } }>('/:id',{ preHandler: authMiddleware }, async (req, reply) => {
     try {
       await comentarioService.deleteComentario(req.params.id);
       return reply.code(204).send();
@@ -53,7 +54,7 @@ export async function comentarioRoutes(fastify: FastifyInstance) {
   });
 
   // Buscar comentários de um post específico
-  fastify.get<{ Params: { postId: string } }>('/post/:postId', async (req, reply) => {
+  fastify.get<{ Params: { postId: string } }>('/post/:postId',{ preHandler: authMiddleware }, async (req, reply) => {
     try {
       const comentarios = await comentarioService.getComentariosByPostId(req.params.postId);
       return reply.send(comentarios);
