@@ -7,7 +7,7 @@ export async function comentarioRoutes(fastify: FastifyInstance) {
   const comentarioService = new ComentarioService();
 
   // Criar comentário
-  fastify.post<{ Body: CreateComentarioDTO }>('/',{ preHandler: authMiddleware }, async (req, reply) => {
+  fastify.post<{ Body: CreateComentarioDTO }>('/', async (req, reply) => {
     try {
       const comentario = await comentarioService.createComentario(req.body);
       return reply.code(201).send(comentario);
@@ -18,7 +18,7 @@ export async function comentarioRoutes(fastify: FastifyInstance) {
   });
 
   // Listar todos os comentários
-  fastify.get('/',{ preHandler: authMiddleware }, async (_, reply) => {
+  fastify.get('/', async (_, reply) => {
     try {
       const comentarios = await comentarioService.getAllComentarios();
       return reply.send(comentarios);
